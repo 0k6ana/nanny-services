@@ -1,44 +1,47 @@
-# .
+# Nanny.Services
 
-This template should help get you started developing with Vue 3 in Vite.
+Вебзастосунок для пошуку нянь та організації догляду за дітьми.
 
-## Recommended IDE Setup
+Користувач може переглядати список нянь, використовувати фільтри для пошуку, переглядати детальну інформацію про спеціаліста, додавати нянь до обраного та створювати запит на зустріч.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Про проєкт
 
-## Recommended Browser Setup
+Nanny.Services — сервіс, який допомагає батькам швидко знайти няню відповідно до своїх потреб.
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+Основні можливості:
 
-## Customize configuration
+- перегляд головної сторінки;
+- перегляд списку нянь;
+- фільтрація та пошук нянь;
+- перегляд детальної інформації про няню;
+- авторизація та реєстрація користувача;
+- додавання нянь до обраного;
+- перегляд списку обраних нянь;
+- створення заявки на зустріч з нянею;
+- адаптивна верстка для різних розмірів екрана.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## Основні технології
 
-## Project Setup
+- Vue 3
+- JavaScript
+- Vue Router
+- Pinia
+- VeeValidate
+- Yup
+- CSS
+- Vite
+- Firebase Authentication
+- LocalStorage
 
-```sh
-npm install
-```
+## Структура проєкту
 
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+```text
+src/
+├── assets/
+├── components/
+├── views/
+├── stores/
+├── services/
+├── router/
+├── App.vue
+└── main.js
