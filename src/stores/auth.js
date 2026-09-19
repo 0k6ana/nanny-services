@@ -11,8 +11,8 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   actions: {
-    register(email, password) {
-      return registerUser(email, password)
+    register(name, email, password) {
+      return registerUser(name, email, password)
     },
 
     login(email, password) {

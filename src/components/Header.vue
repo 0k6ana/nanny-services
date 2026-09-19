@@ -8,6 +8,8 @@ import { useAuthStore } from '../stores/auth.js'
 
 const route = useRoute()
 
+const isHomePage = computed(() => route.path === '/')
+
 const authStore = useAuthStore()
 
 const isAuthModalOpen = ref(false)
@@ -59,24 +61,26 @@ const logout = async () => {
           type="button"
           @click="openAuth('login')"
         >
-          Login
+          Log In
         </button>
 
         <button
           type="button"
           @click="openAuth('register')"
         >
-          Register
+          Registration
         </button>
       </template>
 <template v-else>
-  <span class="user-email">{{ authStore.user.email }}</span>
+<span class="user-email">
+  {{ authStore.user.displayName || authStore.user.email.split('@')[0] }}
+</span>
 
   <button
     type="button"
     @click="logout"
   >
-    Logout
+    Log Out
   </button>
 </template>
     </nav>
@@ -92,15 +96,18 @@ const logout = async () => {
     />
   </Modal>
 </template>
+
 <style scoped>
 .logo {
   margin-right: auto;
 
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 500;
 
   text-decoration: none;
+
+  letter-spacing: -0.02em;
+  color: #fbfbfb;
 }
 header {
   position: fixed;
@@ -115,15 +122,13 @@ header {
 
   box-sizing: border-box;
 
-  background: #ff3b3b;
+  background: transparent;
 
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .header--home {
   width: min(1376px, calc(100% - 48px));
-
-  border-radius: 0;
 }
 
 nav {
@@ -134,7 +139,7 @@ nav {
   height: 100%;
   padding: 0 68px;
 
-  gap: 28px;
+  gap: 14px;
   box-sizing: border-box;
 }
 

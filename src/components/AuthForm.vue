@@ -16,18 +16,7 @@ const emit = defineEmits(['success'])
 
 const authStore = useAuthStore()
 const errorMessage = ref('')
-
-const schema = yup.object({
-  email: yup
-    .string()
-    .email('Введіть коректний email')
-    .required('Email обов’язковий'),
-
-  password: yup
-    .string()
-    .min(6, 'Пароль має містити щонайменше 6 символів')
-    .required('Пароль обов’язковий'),
-})
+const schema = yup.object({ name: yup .string() .when([], { is: () => props.mode === 'register', then: (schema) => schema .min(2, 'Ім’я має містити щонайменше 2 символи') .required('Ім’я обов’язкове'), otherwise: (schema) => schema.notRequired(), }), email: yup .string() .email('Введіть коректний email') .required('Email обов’язковий'), password: yup .string() .min(6, 'Пароль має містити щонайменше 6 символів') .required('Пароль обов’язковий'), })
 
 const { defineField, handleSubmit, errors, isSubmitting } = useForm({
   validationSchema: schema,
@@ -35,22 +24,14 @@ const { defineField, handleSubmit, errors, isSubmitting } = useForm({
 
 const [email, emailAttrs] = defineField('email')
 const [password, passwordAttrs] = defineField('password')
+const [name, nameAttrs] = defineField('name')
 
-const submit = handleSubmit(async (values) => {
-  errorMessage.value = ''
-
-  try {
-    if (props.mode === 'register') {
-      await authStore.register(values.email, values.password)
-    } else {
-      await authStore.login(values.email, values.password)
-    }
-
-    emit('success')
-  } catch (error) {
-    errorMessage.value = error.message
-  }
-})
+const submit = handleSubmit(async (values) => { errorMessage.value = ''
+try { if (props.mode === 'register') {
+  await authStore.register( values.name, values.email, values.password ) }
+  else
+   { await authStore.login(values.email, values.password) }
+    emit('success') } catch (error) { errorMessage.value = error.message } })
 </script>
 
 <template>
@@ -66,7 +47,22 @@ const submit = handleSubmit(async (values) => {
           : 'Welcome back! Please enter your credentials to access your account and continue your babysitter search.'
       }}
     </p>
+    <label
+  v-if="mode === 'register'"
+  class="auth-field"
+>
+  <input
+    v-model="name"
+    v-bind="nameAttrs"
+    type="text"
+    placeholder="Name"
+    autocomplete="name"
+  />
 
+  <span v-if="errors.name" class="auth-error">
+    {{ errors.name }}
+  </span>
+</label>
     <label class="auth-field">
       <input
         v-model="email"

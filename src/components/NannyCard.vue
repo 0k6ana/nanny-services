@@ -1,7 +1,8 @@
-```vue
 <script setup>
 import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+
+import Modal from './Modal.vue'
 
 import { useAuthStore } from '../stores/auth'
 
@@ -17,6 +18,38 @@ const { user } = storeToRefs(authStore)
 
 const isFavorite = ref(false)
 const isExpanded = ref(false)
+
+
+const isAppointmentModalOpen = ref(false)
+const isRequestSent = ref(false)
+
+const appointmentForm = ref({
+  parentName: '',
+  email: '',
+  phone: '',
+  address: '',
+  childAge: '',
+  workingHours: '',
+  comment: '',
+})
+
+const openAppointmentModal = () => {
+  isAppointmentModalOpen.value = true
+  isRequestSent.value = false
+}
+
+const closeAppointmentModal = () => {
+  isAppointmentModalOpen.value = false
+}
+
+const submitAppointment = () => {
+  console.log('Appointment request:', {
+    nanny: props.nanny.name,
+    ...appointmentForm.value,
+  })
+
+  isRequestSent.value = true
+}
 
 const getFavoritesKey = () => {
   if (!user.value) {
@@ -158,13 +191,6 @@ onMounted(() => {
         {{ nanny.about }}
       </p>
     </div>
-
-    <div class="nanny-card__reviews">
-      <p>
-        Reviews: {{ nanny.reviews.length }}
-      </p>
-    </div>
-
     <button
       class="read-more-button"
       type="button"
@@ -173,31 +199,154 @@ onMounted(() => {
       {{ isExpanded ? 'Read less' : 'Read more' }}
     </button>
     <div v-if="isExpanded">
-      <div >
-        <h3>Reviews</h3>
+      <div>
+<article
+  v-for="review in nanny.reviews"
+  :key="review.reviewer"
+  class="review"
+>
+  <div class="review__header">
+    <div class="review__avatar">
+      {{ review.reviewer.charAt(0).toUpperCase() }}
+    </div>
 
-        <article
-          v-for="review in nanny.reviews"
-          :key="review.reviewer"
-        >
-          <h4>{{ review.reviewer }}</h4>
+    <div>
+      <h4>{{ review.reviewer }}</h4>
 
-          <p>
-            Rating: {{ review.rating }}
-          </p>
+      <p class="review__rating">
+        ⭐ {{ review.rating }}
+      </p>
+    </div>
+  </div>
 
-          <p>
-            {{ review.comment }}
-          </p>
-        </article>
+  <p class="review__comment">
+    {{ review.comment }}
+  </p>
+</article>
       </div>
-        <button
-          class="appointment-button"
-          type="button">
-           Make an appointment
-        </button>
+<button
+  class="appointment-button"
+  type="button"
+  @click="openAppointmentModal"
+>
+  Make an appointment
+</button>
     </div>
   </article>
+  <Modal
+  :is-open="isAppointmentModalOpen"
+  @close="closeAppointmentModal"
+>
+  <div class="appointment-form">
+    <h2>Make an appointment</h2>
+
+    <p class="appointment-subtitle">
+      Send a request to {{ nanny.name }}
+    </p>
+
+    <form
+      v-if="!isRequestSent"
+      @submit.prevent="submitAppointment"
+    >
+      <label>
+        Parent name
+        <input
+          v-model="appointmentForm.parentName"
+          type="text"
+          placeholder="Your name"
+          required
+        />
+      </label>
+
+      <label>
+        Email
+        <input
+          v-model="appointmentForm.email"
+          type="email"
+          placeholder="Your email"
+          required
+        />
+      </label>
+
+      <label>
+        Phone number
+        <input
+          v-model="appointmentForm.phone"
+          type="tel"
+          placeholder="+380..."
+          required
+        />
+      </label>
+
+      <label>
+        Address
+        <input
+          v-model="appointmentForm.address"
+          type="text"
+          placeholder="Your address"
+          required
+        />
+      </label>
+
+      <label>
+        Child's age
+        <input
+          v-model="appointmentForm.childAge"
+          type="number"
+          min="0"
+          max="18"
+          placeholder="Child's age"
+          required
+        />
+      </label>
+
+      <label>
+        Working hours
+        <input
+          v-model="appointmentForm.workingHours"
+          type="text"
+          placeholder="For example: 9:00 - 18:00"
+          required
+        />
+      </label>
+
+      <label>
+        Comment
+        <textarea
+          v-model="appointmentForm.comment"
+          placeholder="Additional information..."
+          rows="4"
+        ></textarea>
+      </label>
+
+      <button
+        class="send-request-button"
+        type="submit"
+      >
+        Send request
+      </button>
+    </form>
+
+    <div
+      v-else
+      class="request-success"
+    >
+      <h3>Request sent!</h3>
+
+      <p>
+        Your request has been sent to {{ nanny.name }}.
+      </p>
+
+      <button
+        class="send-request-button"
+        type="button"
+        @click="closeAppointmentModal"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</Modal>
 </template>
 <style scoped>
 .nanny-card {
@@ -322,6 +471,50 @@ onMounted(() => {
   width: 1px;
   height: 20px;
   background: #d9d9d9;
+}
+.review__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+  background: #f03f3f;
+  color: #ffffff;
+
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.review__header h4 {
+  margin: 0 0 4px;
+
+  color: #191a2a;
+  font-size: 15px;
+}
+
+.review__rating {
+  margin: 0 !important;
+
+  color: #77777d;
+  font-size: 14px;
+}
+
+.review__comment {
+  margin-top: 12px !important;
+
+  color: #77777d;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 
@@ -594,5 +787,105 @@ onMounted(() => {
     right: 16px;
     font-size: 28px;
   }
+}
+
+/* ===== APPOINTMENT FORM ===== */
+
+.appointment-form h2 {
+  margin: 0;
+
+  color: #191a2a;
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.appointment-subtitle {
+  margin: 8px 0 24px;
+
+  color: #77777d;
+  font-size: 14px;
+}
+
+.appointment-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.appointment-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  color: #191a2a;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.appointment-form input,
+.appointment-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #191a2a;
+  font-family: inherit;
+  font-size: 14px;
+
+  outline: none;
+  box-sizing: border-box;
+}
+
+.appointment-form input:focus,
+.appointment-form textarea:focus {
+  border-color: #f03f3f;
+}
+
+.appointment-form textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.send-request-button {
+  width: 100%;
+  margin-top: 4px;
+  padding: 13px 20px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #f03f3f;
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.send-request-button:hover {
+  background: #d93636;
+}
+
+.request-success {
+  text-align: center;
+}
+
+.request-success h3 {
+  margin: 10px 0;
+
+  color: #191a2a;
+  font-size: 22px;
+}
+
+.request-success p {
+  margin: 0 0 24px;
+
+  color: #77777d;
+  line-height: 1.5;
 }
 </style>

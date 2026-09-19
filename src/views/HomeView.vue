@@ -16,10 +16,10 @@
             Find Babysitters Online for All Occasions
           </p>
 
-          <button class="get-started">
-            Get started
-            <span>↗</span>
-          </button>
+<RouterLink to="/nannies" class="get-started">
+  Get started
+  <span>↗</span>
+</RouterLink>
 
         </div>
       </div>
@@ -47,8 +47,8 @@
 
 .home {
   min-height: 100vh;
+  max-width: 100%;
   padding: 0;
-  background: #e0dddd;
 }
 
 
@@ -115,7 +115,7 @@
   display: flex;
   align-items: center;
 
-  gap: 28px;
+  gap: 14px;
 }
 
 .navigation a {
@@ -212,9 +212,11 @@
 .get-started {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
 
-  height: 44px;
+  width: 120px;
+  height: 40px;
 
   margin-top: 40px;
   padding: 0 34px;
@@ -229,6 +231,7 @@
   font-size: 14px;
 
   cursor: pointer;
+  text-decoration: none;
 }
 
 .get-started span {

@@ -64,13 +64,15 @@ onUnmounted(() => {
   position: relative;
 
   width: 100%;
-  max-width: 440px;
-  padding: 50px;
+  max-width: 520px;
+  max-height: 90vh;
+  padding: 42px;
 
   border-radius: 24px;
   background: #ffffff;
 
   box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .close-button {
@@ -100,6 +102,7 @@ onUnmounted(() => {
 
 @media (max-width: 480px) {
   .modal {
+    max-height: 92vh;
     padding: 40px 24px 30px;
     border-radius: 20px;
   }
