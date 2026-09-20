@@ -122,13 +122,14 @@ header {
 
   box-sizing: border-box;
 
-  background: transparent;
+  background: #ff3b3b;
 
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .header--home {
-  width: min(1376px, calc(100% - 48px));
+  width: min(1184px, calc(100% - 48px));
+  background: transparent;
 }
 
 nav {
